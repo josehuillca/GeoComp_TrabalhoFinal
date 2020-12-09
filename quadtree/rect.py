@@ -27,6 +27,13 @@ class Rect:
                 point_x <  self.east_edge and
                 point_y >= self.north_edge and
                 point_y < self.south_edge)
+    
+    def contains_points(self, points):
+        pts = []
+        for point in points:
+            if self.contains(point):
+                pts.append(point)
+        return pts
 
     def intersects(self, other):
         """Does Rect object other interesect this Rect?"""
