@@ -3,7 +3,7 @@ import matplotlib.patches as patches
 
 from quadtree.node import Node
 from quadtree.point import Point
-from quadtree.utils import recursive_subdivide, contains, find_children
+from quadtree.utils import recursive_subdivide, contains, find_children,leaf_nodes, get_neighbor_of_greater_or_equal_size,Direction,has_to_split, DEBUG_MODE
 
 class QTree():
     def __init__(self, k, w, h, points):
@@ -11,6 +11,8 @@ class QTree():
         # w: width
         # h: height
         # points: List[Point]
+        self.w = w
+        self.h = h
         self.threshold = k
         self.points = points
         self.root = Node(0, 0, w, h, self.points)
@@ -25,14 +27,49 @@ class QTree():
         recursive_subdivide(self.root, self.threshold)
 
     def balanced(self):
+        L = leaf_nodes(self.root)
+        print(len(L))
+        while len(L)>0:
+            # Remove a leaf u from L
+            u = L.pop(0)
+            # Neighbors of u
+            NL = [
+                get_neighbor_of_greater_or_equal_size(u, Direction.N),
+                get_neighbor_of_greater_or_equal_size(u, Direction.S),
+                get_neighbor_of_greater_or_equal_size(u, Direction.W),
+                get_neighbor_of_greater_or_equal_size(u, Direction.E)
+            ]
+            if has_to_split(u, NL):
+                # Add four children(nw,sw, ne,se) to u in 'self' & update their object contents
+                w_ = float(u.width/2)
+                h_ = float(u.height/2)
+                p = []
+                nw = Node(u.x0, u.y0, w_, h_, p, depth=u.depth+1, parent=u)
+                sw = Node(u.x0, u.y0+h_, w_, h_, p, depth=u.depth+1, parent=u)
+                ne = Node(u.x0 + w_, u.y0, w_, h_, p, depth=u.depth+1, parent=u)
+                se = Node(u.x0+w_, u.y0+h_, w_, h_, p, depth=u.depth+1, parent=u)
+                u.children = [nw, sw, ne, se]
+                
+                # Insert four children(nw,sw, ne,se) into L
+                L.append(nw)
+                L.append(sw)
+                L.append(ne)
+                L.append(se) 
+                # Check if nw,sw, ne,se have neighbors that should split & add them to L
+                if DEBUG_MODE:
+                    uu = get_neighbor_of_greater_or_equal_size(se, Direction.E)
+                    print(uu)
+                pass
+            
+
         pass
     
-    def draw(self, w, h, title= "Quadtree"):
+    def draw(self, title= "Quadtree"):
         _ = plt.figure(figsize=(12, 8))
         # Change init coordenada(0,0) in Top-Left
         ax = plt.subplot()
-        ax.set_xlim(0, w)
-        ax.set_ylim(h, 0)
+        ax.set_xlim(0, self.w)
+        ax.set_ylim(self.h, 0)
 
         plt.title(title)
         c = find_children(self.root)

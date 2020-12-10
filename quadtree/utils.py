@@ -2,6 +2,8 @@ import cv2
 from enum import IntEnum, Enum
 from quadtree.node import Node
 
+DEBUG_MODE = False
+
 class Child(IntEnum):
     NW = 0
     SW = 1
@@ -17,6 +19,28 @@ class Direction(Enum):
     S = 5
     W = 6
     E = 7
+
+def has_to_split(node, neighbors):
+    res = [deeper(el) if el is not None else -1 for el in neighbors]
+    a = max(res)
+    if DEBUG_MODE: 
+        print(res, 'max_depth: ', a, 'u_depth: ',node.depth)
+    return node.depth<(a-1)
+    # i = 0
+    # for el in neighbors:
+    #     if el is not None:
+    #         print(el.depth, node.depth)
+    #         if el.depth < node.depth-1:
+    #             return True, i
+    #     i += 1
+    # return False, i
+
+def deeper(node):
+    if node is None: return -1
+    if node.leaf: return node.depth
+
+    c = find_children(node)
+    return max([el.depth for el in c])
 
 def recursive_subdivide(node, k):
     if len(node.points)<=k:
