@@ -25,7 +25,7 @@ def has_to_split(node, neighbors):
     a = max(res)
     if DEBUG_MODE: 
         print(res, 'max_depth: ', a, 'u_depth: ',node.depth)
-    return node.depth<(a-1)
+    return node.depth<=(a-2), res # 1 ou 2?
     # i = 0
     # for el in neighbors:
     #     if el is not None:
