@@ -118,3 +118,15 @@ class QTree():
         plt.plot(x, y, 'ro') 
         plt.show()
         return
+    
+    def draw_points(self):
+        _ = plt.figure(figsize=(12, 8))
+        # Change init coordenada(0,0) in Top-Left
+        ax = plt.subplot()
+        ax.set_xlim(0, self.w)
+        ax.set_ylim(self.h, 0)
+        # plots the points as red dots
+        x = [point.x for point in self.points]
+        y = [point.y for point in self.points]
+        plt.plot(x, y, 'ro') 
+        plt.show()

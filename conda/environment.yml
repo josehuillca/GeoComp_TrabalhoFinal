@@ -1,3 +1,10 @@
-- jupyter
-- opencv-python
-- opencv-contrib-python
+name: geocomp
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pip:
+    - jupyter
+    - numpy
+    - opencv-python
+    - opencv-contrib-python

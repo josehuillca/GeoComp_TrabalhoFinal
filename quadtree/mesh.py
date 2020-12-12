@@ -357,7 +357,7 @@ class Mesh():
                 if DEBUG_MODE:
                     print('warning! Not case found triangulation..')
 
-    def draw(self, w, h):
+    def draw(self, w, h, plot_points=True):
         _ = plt.figure(figsize=(12, 8))
 
         plt.figure()
@@ -373,4 +373,10 @@ class Mesh():
                 i += 1
             t1 = plt.Polygon(tri, fill=False, edgecolor='black', lw=0.5)
             plt.gcf().gca().add_patch(t1)
+
+        if plot_points:
+            # plots the points as red dots
+            xx = [point.x for point in self.qtree.points]
+            yy = [point.y for point in self.qtree.points]
+            plt.plot(xx, yy, 'ro') 
         plt.show()
