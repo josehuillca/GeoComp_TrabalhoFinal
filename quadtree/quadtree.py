@@ -112,9 +112,14 @@ class QTree():
         for n in c:
             plt.gcf().gca().add_patch(patches.Rectangle((n.x0, n.y0), n.width, n.height, fill=False))
         
-        # plots the points as red dots
         x = [point.x for point in self.points]
         y = [point.y for point in self.points]
+
+        draw_polygon = True
+        if draw_polygon==True:
+            plt.gcf().gca().add_patch(patches.Polygon(list(zip(x,y)), fill=False, color='b'))
+
+        # plots the points as red dots
         plt.plot(x, y, 'ro') 
         plt.show()
         return
